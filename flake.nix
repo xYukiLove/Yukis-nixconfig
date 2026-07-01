@@ -1,8 +1,10 @@
 {
-  description = "Adding nixpkgs-stable.";
+  description = "Cleaning Up file";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-26.05";
+    nixvim.url = "github:nix-community/nixvim";
+    nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v1.1.0";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -13,10 +15,6 @@
     };
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    quickshell = {
-      url = "github:outfoxxed/quickshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     spicetify-nix = {
@@ -31,9 +29,6 @@
       url = "github:sxyazi/yazi";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nix-cachyos-kernel = {
-      url = "github:xddxdd/nix-cachyos-kernel/release";
-    };
     zen-browser = {
       url = "github:youwen5/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -42,22 +37,27 @@
       url = "github:mangowm/mango";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    helium = {
+      url = "github:schembriaiden/helium-browser-nix-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs@{
-  self,
-  nixpkgs,
-  nixpkgs-stable,
-  lanzaboote,
-  noctalia,
-  home-manager,
-  quickshell,
-  spicetify-nix,
-  prismlauncher,
-  yazi,
-  nix-cachyos-kernel,
-  zen-browser,
-  mangowm,
-  ...
+    self,
+    nixpkgs,
+    nixpkgs-stable,
+    lanzaboote,
+    noctalia,
+    home-manager,
+    spicetify-nix,
+    prismlauncher,
+    yazi,
+    nix-cachyos-kernel,
+    zen-browser,
+    mangowm,
+    nixvim,
+    helium,
+    ...
   }: {
     nixosConfigurations = {
       nixos-btw = nixpkgs.lib.nixosSystem {
@@ -76,6 +76,7 @@
 	inputs.mangowm.nixosModules.mango
         home-manager.nixosModules.home-manager
 	inputs.spicetify-nix.nixosModules.default
+	nixvim.nixosModules.nixvim
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
@@ -92,6 +93,7 @@
 	    inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
             inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
 	    prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
+	    inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default
 	    (yazi.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
 	      _7zz = pkgs._7zz-rar;
 	    })
