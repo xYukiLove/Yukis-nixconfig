@@ -17,6 +17,14 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
   #pkgs.cachyosKernels.linuxPackages-cachyos-latest-zen4; #pkgs.linuxPackages_latest;
   networking.hostName = "nixos-btw";
+  users.users.allie = {
+    isNormalUser = true;
+    description = "Allie";
+    shell = pkgs.zsh;
+    extraGroups = [ "networkmanager" "wheel" "input" ];
+    packages = with pkgs; [
+    ];
+  };
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = false;
@@ -82,6 +90,10 @@
     wireplumber.enable = true;
   };
   systemd.user.settings.Manager = {
+    NIXOS_OZONE_WL = "1";
+    ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+    SDL_VIDEODRIVER = "wayland";
+    WLR_DRM_NO_ATOMIC = "1";
     DefaultEnvironment = [
       "XDG_SESSION_TYPE=wayland"
       "XDG_CURRENT_DESKTOP=mango"
@@ -89,15 +101,24 @@
   };
   xdg.portal = {
     enable = true;
-    wlr.enable = true;
+    xdgOpenUsePortal = true;
+    wlr = {
+      enable = true;
+      settings = {
+        screencast = {
+	  max_fps = 60;
+	  chooser_type = "dmenu";
+	  chooser_cmd = "${pkgs.wofi}/bin/wofi --show dmenu";
+	};
+      };
+    };
     extraPortals = [
       pkgs.xdg-desktop-portal-wlr
       pkgs.xdg-desktop-portal-gtk
-      pkgs.xdg-desktop-portal-gnome
     ];
     config = {
       common = {
-        default = [ "gtk" "wlr" "gnome" ];
+        default = [ "wlr" ];
 	"org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
         "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
         "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
@@ -121,15 +142,6 @@
       "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
     ];
   };
-  users.users.allie = {
-    isNormalUser = true;
-    description = "Allie";
-    shell = pkgs.zsh;
-    extraGroups = [ "networkmanager" "wheel" "input" ];
-    packages = with pkgs; [
-    ];
-  };
-  programs.niri.enable = true;
   programs.mango.enable = true;
   services.flatpak.enable = true;
   programs.zsh.enable = true;
@@ -240,6 +252,8 @@
     pavucontrol
     kdePackages.kdenlive
     dunst
+    wofi
+    dmenu
     (pkgs.wrapOBS {
       plugins = with pkgs.obs-studio-plugins; [
         wlrobs
