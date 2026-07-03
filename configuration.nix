@@ -3,23 +3,21 @@
   imports =
     [ 
       ./hardware-configuration.nix
-      ./noctalia.nix
     ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   fileSystems."/mnt/linuxgames" = {
-    device = "UUID=187929c8-4308-4dae-9c0d-c25c3680f8c6";
-    fsType = "btrfs";
-    options = [ "compress=zstd" "noatime" ];   
+    device = "UUID=84865633-a9a6-41c5-9998-870de2e1549d";
+    fsType = "ext4";
   };
   services.xserver.videoDrivers = [ "amdgpu" ];
   boot.kernelPackages = pkgs.linuxPackages_latest;
   #pkgs.cachyosKernels.linuxPackages-cachyos-latest-zen4; #pkgs.linuxPackages_latest;
   networking.hostName = "nixos-btw";
-  users.users.allie = {
+  users.users.yuki = {
     isNormalUser = true;
-    description = "Allie";
+    description = "Yuki";
     shell = pkgs.zsh;
     extraGroups = [ "networkmanager" "wheel" "input" ];
     packages = with pkgs; [
@@ -71,6 +69,8 @@
   '';
   services.udev.enable = true;
   services.xserver.enable = true;
+  #services.xserver.desktopManager.xfce.enable = true;
+  services.desktopManager.plasma6.enable = true;
   services.displayManager.sddm = {
     enable = true;
   };
@@ -201,13 +201,11 @@
     wget
     git
     kitty
-    alacritty
     fastfetch
     vlc
     sbctl
     ani-cli
     krita
-    brave
     usbutils
     xwayland-satellite
     fuzzel
@@ -231,7 +229,6 @@
     hyfetch
     tree
     librewolf
-    foot
     wmenu
     wl-clipboard
     grim
