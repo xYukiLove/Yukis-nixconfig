@@ -13,10 +13,6 @@
       url = "github:noctalia-dev/noctalia";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -48,7 +44,6 @@
     nixpkgs-stable,
     lanzaboote,
     noctalia,
-    home-manager,
     spicetify-nix,
     prismlauncher,
     yazi,
@@ -72,17 +67,9 @@
 	};
 	modules = [
         ./configuration.nix
-	./noctalia.nix
 	inputs.mangowm.nixosModules.mango
-        home-manager.nixosModules.home-manager
 	inputs.spicetify-nix.nixosModules.default
 	nixvim.nixosModules.nixvim
-        {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.extraSpecialArgs = { inherit inputs; };
-          home-manager.users.allie = ./home.nix;
-        }
         lanzaboote.nixosModules.lanzaboote
         ({ pkgs, lib, inputs, ... }: {
 	  nixpkgs.overlays = [
