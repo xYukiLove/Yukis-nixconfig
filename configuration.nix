@@ -1,7 +1,7 @@
 { config, pkgs, inputs, pkgs-stable,... }:
 {
   imports =
-    [ 
+    [
       ./hardware-configuration.nix
     ];
   boot.loader.systemd-boot.enable = true;
@@ -23,10 +23,12 @@
     packages = with pkgs; [
     ];
   };
+  services.blueman.enable = true;
   hardware.bluetooth = {
     enable = true;
-    powerOnBoot = false;
+    powerOnBoot = true;
   };
+  networking.wireless.enable = true;
   networking.networkmanager.enable = true;
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
@@ -70,7 +72,7 @@
   services.udev.enable = true;
   services.xserver.enable = true;
   #services.xserver.desktopManager.xfce.enable = true;
-  services.desktopManager.plasma6.enable = true;
+  #services.desktopManager.plasma6.enable = true;
   services.displayManager.sddm = {
     enable = true;
   };
@@ -102,9 +104,9 @@
       enable = true;
       settings = {
         screencast = {
-	  max_fps = 60;
-	  chooser_type = "dmenu";
-	  chooser_cmd = "${pkgs.wofi}/bin/wofi --show dmenu";
+	 max_fps = 60;
+	 chooser_type = "dmenu";
+	 chooser_cmd = "${pkgs.wofi}/bin/wofi --show dmenu";
 	};
       };
     };
@@ -114,7 +116,7 @@
     ];
     config = {
       common = {
-        default = [ "wlr" ];
+        default = [ "gtk" ];
 	"org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
         "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
         "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
@@ -143,7 +145,7 @@
   programs.zsh.enable = true;
   programs.steam = {
     enable = true;
-    remotePlay.openFirewall = true; 
+    remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
   };
   programs.spicetify =
@@ -172,13 +174,13 @@
       enable = true;
       settings = {
         user_default_options = {
-      	  css = true;
-	  css_fn = true;
-	  rgb = true;
-	  hsl = true;
-	  names = true;
-	  tailwind = true;
-	  mode = "background";
+      	 css = true;
+	 css_fn = true;
+	 rgb = true;
+	 hsl = true;
+	 names = true;
+	 tailwind = true;
+	 mode = "background";
 	};
       };
     };
@@ -190,6 +192,7 @@
   };
   nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [
+    blueman
     polkit_gnome
     kdePackages.dolphin
     zsh
