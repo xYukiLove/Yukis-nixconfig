@@ -1,7 +1,7 @@
 { config, pkgs, inputs, pkgs-stable,... }:
 {
   imports =
-    [
+    [ 
       ./hardware-configuration.nix
     ];
   boot.loader.systemd-boot.enable = true;
@@ -104,10 +104,10 @@
       enable = true;
       settings = {
         screencast = {
-	 max_fps = 60;
-	 chooser_type = "dmenu";
-	 chooser_cmd = "${pkgs.wofi}/bin/wofi --show dmenu";
-	};
+	      max_fps = 60;
+	      chooser_type = "dmenu";
+	      chooser_cmd = "${pkgs.wofi}/bin/wofi --show dmenu";
+	    };
       };
     };
     extraPortals = [
@@ -117,7 +117,7 @@
     config = {
       common = {
         default = [ "gtk" ];
-	"org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
+	    "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
         "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
         "org.freedesktop.impl.portal.Secret" = [ "gnome-keyring" ];
         "org.freedesktop.impl.portal.Inhibit" = [ "none" ];
@@ -140,50 +140,12 @@
       "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
     ];
   };
-  programs.mango.enable = true;
   services.flatpak.enable = true;
   programs.zsh.enable = true;
   programs.steam = {
     enable = true;
-    remotePlay.openFirewall = true;
+    remotePlay.openFirewall = true; 
     dedicatedServer.openFirewall = true;
-  };
-  programs.spicetify =
-  let
-    spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-  in
-  {
-    enable = true;
-    enabledExtensions = with spicePkgs.extensions; [
-      adblockify
-      hidePodcasts
-      shuffle
-    ];
-    theme = spicePkgs.themes.starryNight;
-    colorScheme = "Base";
-  };
-  programs.nixvim = {
-    enable = true;
-    colorschemes.kanagawa-paper.enable = true;
-    globals.mapleader = " ";
-    opts = {
-      number = true;
-      shiftwidth = 2;
-    };
-    plugins.colorizer = {
-      enable = true;
-      settings = {
-        user_default_options = {
-      	 css = true;
-	 css_fn = true;
-	 rgb = true;
-	 hsl = true;
-	 names = true;
-	 tailwind = true;
-	 mode = "background";
-	};
-      };
-    };
   };
   programs.gamemode.enable = true;
   environment.variables = {
@@ -253,8 +215,8 @@
     (pkgs.wrapOBS {
       plugins = with pkgs.obs-studio-plugins; [
         wlrobs
-	obs-backgroundremoval
-	obs-pipewire-audio-capture
+	    obs-backgroundremoval
+	    obs-pipewire-audio-capture
       ];
     })
   ];
