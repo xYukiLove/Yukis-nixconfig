@@ -57,42 +57,80 @@
     nixosConfigurations = {
       nixos-btw = nixpkgs.lib.nixosSystem {
         specialArgs = let
-	  system = "x86_64-linux";
-	in {
-	  inherit inputs;
-	  pkgs-stable = import nixpkgs-stable {
-	    inherit system;
-	    config.allowUnfree = true;
-	  };
-	};
-	modules = [
-        ./configuration.nix
-	inputs.mangowm.nixosModules.mango
-	inputs.spicetify-nix.nixosModules.default
-	nixvim.nixosModules.nixvim
-        lanzaboote.nixosModules.lanzaboote
-        ({ pkgs, lib, inputs, ... }: {
-	  nixpkgs.overlays = [
-	    nix-cachyos-kernel.overlays.default
-	  ];
-          environment.systemPackages = [
-            pkgs.sbctl
-	    inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
-            inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
-	    prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
-	    inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default
-	    (yazi.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
-	      _7zz = pkgs._7zz-rar;
-	    })
-          ];
-          boot.loader.systemd-boot.enable = lib.mkForce false;
-          boot.lanzaboote = {
-            enable = true;
-            pkiBundle = "/var/lib/sbctl";
-          };
-	    })
-      ];
+	      system = "x86_64-linux";
+	    in {
+	      inherit inputs;
+	      pkgs-stable = import nixpkgs-stable {
+	        inherit system;
+	        config.allowUnfree = true;
+	      };
+	    };
+	    modules = [
+          ./configuration.nix
+	      inputs.mangowm.nixosModules.mango
+	      inputs.spicetify-nix.nixosModules.default
+	      nixvim.nixosModules.nixvim
+          lanzaboote.nixosModules.lanzaboote
+          ({ pkgs, lib, inputs, ... }: {
+	        nixpkgs.overlays = [
+	          nix-cachyos-kernel.overlays.default
+	        ];
+	        programs.mango.enable = true;
+	        programs.spicetify =
+            let
+              spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
+            in
+            {
+              enable = true;
+              enabledExtensions = with spicePkgs.extensions; [
+                adblockify
+                hidePodcasts
+                shuffle
+              ];
+              theme = spicePkgs.themes.starryNight;
+              colorScheme = "Base";
+            };
+            programs.nixvim = {
+              enable = true;
+              colorschemes.kanagawa-paper.enable = true;
+              globals.mapleader = " ";
+              opts = {
+                number = true;
+                shiftwidth = 2;
+              };
+              plugins.colorizer = {
+                enable = true;
+                settings = {
+                  user_default_options = {
+      	            css = true;
+	                css_fn = true;
+	                rgb = true;
+	                hsl = true;
+	                names = true;
+	                tailwind = true;
+	                mode = "background";
+	              };
+                };
+              };
+            };
+            environment.systemPackages = [
+              pkgs.sbctl
+	          inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+              inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+	          prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
+	          inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default
+	          (yazi.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
+	            _7zz = pkgs._7zz-rar;
+	          })
+            ];
+            boot.loader.systemd-boot.enable = lib.mkForce false;
+            boot.lanzaboote = {
+              enable = true;
+              pkiBundle = "/var/lib/sbctl";
+            };
+	      })
+        ];
+      };
     };
   };
- };
 }
