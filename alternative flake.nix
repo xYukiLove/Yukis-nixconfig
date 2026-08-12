@@ -58,7 +58,7 @@
 	        inherit inputs;
 	      };
 	      modules = [
-          ./configuration.nix
+            ./configuration.nix
 	        ./flake-modules.nix
         ];
       };
