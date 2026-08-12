@@ -7,6 +7,7 @@
       ./nixosModules/peripherials.nix
       ./nixosModules/xdg.nix
       ./nixosModules/spicetify.nix
+      ./nixosModules/mangowm.nix
     ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -16,7 +17,8 @@
     fsType = "ext4";
   };
   services.xserver.videoDrivers = [ "amdgpu" ];
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelPackages = pkgs.unstable.linuxPackages_latest;
+  #boot.kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-zen4;
   networking.hostName = "nixos-btw";
   users.users.yuki = {
     isNormalUser = true;
@@ -50,8 +52,8 @@
     LC_TIME = "en_US.UTF-8";
   };
   services.xserver.enable = true;
-  services.desktopManager.plasma6.enable = true;
-  services.desktopManager.cosmic.enable = true;
+  services.xserver.desktopManager.xfce.enable = true;
+  #services.desktopManager.plasma6.enable = true;
   services.xserver.displayManager.startx.enable = true;
   services.xserver.xkb = {
     layout = "us";
@@ -67,12 +69,12 @@
     pulse.enable = true;
     wireplumber.enable = true;
   };
-  environment.sessionVariables = {
-    NIXOS_OZONE_WL = "1";
-    ELECTRON_OZONE_PLATFORM_HINT = "wayland";
-    SDL_VIDEODRIVER = "wayland";
-    WLR_DRM_NO_ATOMIC = "1";
-  };
+  #environment.sessionVariables = {
+    #NIXOS_OZONE_WL = "1";
+    #ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+    #SDL_VIDEODRIVER = "wayland";
+    #WLR_DRM_NO_ATOMIC = "1";
+  #};
   nix.settings = {
     extra-substituters = [
       "https://nix-gaming.cachix.org"
@@ -85,8 +87,6 @@
       "yazi.cachix.org-1:Dcdz63NZKfvUCbDGngQDAZq6kOroIrFoyO064uvLh8k="
     ];
   };
-  programs.mango.enable = true;
-  #programs.kineticwe.enable = true;
   programs.zsh.enable = true;
   programs.steam = {
     enable = true;
@@ -96,21 +96,27 @@
   programs.gamemode.enable = true;
   environment.variables = {
     XCURSOR_THEME = "Shinobu-Oshino";
-    XCURSOR_SIZE = "24";
+    XCURSOR_SIZE = "32";
   };
   services.flatpak = {
     enable = true;
     packages = [
       "org.vinegarhq.Sober"
+      "com.boxy_svg.BoxySVG"
+      "com.discordapp.Discord"
     ];
   };
   nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [
+    pkgs.unstable.vesktop
+    pkgs.unstable.librewolf
     theclicker
+    osu-lazer-bin
     bolt-launcher
     blueman
     polkit_gnome
     thunar
+    nwg-look
     thunar-volman
     zsh
     zsh-powerlevel10k
@@ -121,18 +127,16 @@
     fastfetch
     cpufetch
     hyfetch
-    fetch
     vlc
     sbctl
     ani-cli
     krita
+    inkscape
     usbutils
     xwayland-satellite
-    fuzzel
     kdePackages.ark
     unrar
     btop
-    kdePackages.kate
     heroic
     ddcutil
     cachix
@@ -144,27 +148,11 @@
     vial
     win2xcur
     xcursor-themes
-    lact
     tree
-    librewolf
-    wmenu
-    wl-clipboard
-    grim
-    slurp
-    swaybg
-    waybar
-    cava
-    wlogout
-    lutris
     gamescope
-    discord
-    vesktop
     pavucontrol
+    gcc
     kdePackages.kdenlive
-    dunst
-    wofi
-    dmenu
-    rofi
     ristretto
     tumbler
     gvfs
@@ -178,15 +166,26 @@
       ];
     })
   ];
-  fonts.packages = with pkgs; [
-    nerd-fonts.jetbrains-mono
-    noto-fonts-cjk-sans
-    maple-mono.NF
-    noto-fonts
-    noto-fonts-cjk-serif
-    noto-fonts-color-emoji
-  ];
+  fonts = {
+    enableDefaultPackages = true;
+    packages = with pkgs; [
+      nerd-fonts.jetbrains-mono
+      noto-fonts-cjk-sans
+      maple-mono.NF
+      noto-fonts
+      noto-fonts-cjk-serif
+      noto-fonts-color-emoji
+    ];
+    fontconfig = {
+      enable = true;
+      defaultFonts = {
+        monospace = [ "Maple Mono NF" ];
+	    sansSerif = [ "Maple Mono NF" ];
+	    erif = [ "Maple Mono NF" ];
+      };
+    };
+  };
   networking.firewall.allowedTCPPorts = [ 53317 ];
   networking.firewall.allowedUDPPorts = [ 53317 ];
-  system.stateVersion = "26.11";
+  system.stateVersion = "26.05";
 }
