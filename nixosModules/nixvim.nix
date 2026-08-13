@@ -13,12 +13,12 @@
       settings = {
         user_default_options = {
       	  css = true;
-	  css_fn = true;
-	  rgb = true;
-	  hsl = true;
-	  names = true;
-	  tailwind = true;
-	  mode = "background";
+	      css_fn = true;
+	      rgb = true;
+	      hsl = true;
+	      names = true;
+	      tailwind = true;
+	      mode = "background";
         };
       };
     };
