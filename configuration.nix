@@ -26,6 +26,8 @@
     shell = pkgs.zsh;
     extraGroups = [ "networkmanager" "wheel" "input" ];
     packages = with pkgs; [
+      kdePackages.ark
+      kdePackages.kdenlive
     ];
   };
   services.blueman.enable = true;
@@ -52,8 +54,6 @@
     LC_TIME = "en_US.UTF-8";
   };
   services.xserver.enable = true;
-  services.xserver.desktopManager.xfce.enable = true;
-  #services.desktopManager.plasma6.enable = true;
   services.xserver.displayManager.startx.enable = true;
   services.xserver.xkb = {
     layout = "us";
@@ -69,12 +69,6 @@
     pulse.enable = true;
     wireplumber.enable = true;
   };
-  #environment.sessionVariables = {
-    #NIXOS_OZONE_WL = "1";
-    #ELECTRON_OZONE_PLATFORM_HINT = "wayland";
-    #SDL_VIDEODRIVER = "wayland";
-    #WLR_DRM_NO_ATOMIC = "1";
-  #};
   nix.settings = {
     extra-substituters = [
       "https://nix-gaming.cachix.org"
@@ -108,56 +102,51 @@
   };
   nixpkgs.config.allowUnfree = true;
   environment.systemPackages = with pkgs; [
-    pkgs.unstable.vesktop
-    pkgs.unstable.librewolf
-    theclicker
-    osu-lazer-bin
-    bolt-launcher
-    blueman
-    polkit_gnome
-    thunar
-    nwg-look
-    thunar-volman
-    zsh
-    zsh-powerlevel10k
-    bat
-    wget
-    git
-    kitty
-    fastfetch
-    cpufetch
-    hyfetch
-    vlc
-    sbctl
     ani-cli
-    krita
-    inkscape
-    usbutils
-    xwayland-satellite
-    kdePackages.ark
-    unrar
+    bat
+    blueman
+    bolt-launcher
     btop
-    heroic
-    ddcutil
     cachix
-    localsend
-    protonup-qt
-    protontricks
+    cbonsai
+    ddcutil
+    fastfetch
+    faugus-launcher
+    gamescope
+    ghostty
+    git
+    gnome.gvfs
+    gvfs
+    heroic
+    hyfetch
+    kitty
+    krita
     lm_sensors
-    proton-vpn
+    localsend
+    osu-lazer-bin
+    pavucontrol
+    pkgs.unstable.librewolf
+    pkgs.unstable.nwg-look
+    pkgs.unstable.vesktop
+    polkit_gnome
+    protontricks
+    protonup-qt
+    ristretto
+    sbctl
+    thunar
+    thunar-volman
+    tree
+    tumbler
+    unrar
+    usbutils
     vial
+    vlc
+    wget
     win2xcur
     xcursor-themes
-    tree
-    gamescope
-    pavucontrol
-    gcc
-    kdePackages.kdenlive
-    ristretto
-    tumbler
-    gvfs
-    gnome.gvfs
-    faugus-launcher
+    xwayland-satellite
+    zsh
+    zsh-powerlevel10k
     (pkgs.wrapOBS {
       plugins = with pkgs.obs-studio-plugins; [
         wlrobs
@@ -180,8 +169,8 @@
       enable = true;
       defaultFonts = {
         monospace = [ "Maple Mono NF" ];
-	    sansSerif = [ "Maple Mono NF" ];
-	    erif = [ "Maple Mono NF" ];
+	sansSerif = [ "Maple Mono NF" ];
+	serif = [ "Maple Mono NF" ];
       };
     };
   };
