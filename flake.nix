@@ -1,5 +1,5 @@
 {
-  description = "Cleaning Up file";
+  description = "Restructuring Flakes";
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs?ref=nixos-unstable";
@@ -29,13 +29,13 @@
     };
     noctalia = {
       url = "github:noctalia-dev/noctalia";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
   };
   outputs = inputs@{
     self,
     nixpkgs,
-    nixpkgs-stable,
+    nixpkgs-unstable,
     lanzaboote,
     spicetify-nix,
     prismlauncher,
@@ -47,51 +47,54 @@
     noctalia,
     nix-cachyos-kernel,
     ...
-  }:
+  }: 
   {
     nixosConfigurations = {
       nixos-btw = nixpkgs.lib.nixosSystem {
         specialArgs = 
-	    let
-	      system = "x86_64-linux";
-	    in {
-	      inherit inputs;
+	let
+          system = "x86_64-linux";
+	in {
+          inherit inputs;
+        };
+        modules = [
+          ./configuration.nix
+	  ./nixosModules/spicetify.nix
+	  ./nixosModules/nixvim.nix
+	  ./nixosModules/mangowm.nix
+	  inputs.mangowm.nixosModules.mango
+	  spicetify-nix.nixosModules.spicetify
+	  nixvim.nixosModules.nixvim
+	  lanzaboote.nixosModules.lanzaboote
+	  nix-flatpak.nixosModules.nix-flatpak
+	  ({ pkgs, lib, ... }:
+	  {
+	    nixpkgs.overlays = [
+	      (final: prev: {
+	        unstable = import inputs.nixpkgs-unstable {
+		  system = final.stdenv.hostPlatform.system;
+		  config.allowUnfree = true;
+		};
+	      })
+	      nix-cachyos-kernel.overlays.default
+	    ];
+	    environment.systemPackages = [
+	      pkgs.sbctl
+	      inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
+	      prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
+	      inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default
+	      (yazi.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
+	        _7zz = pkgs._7zz-rar;
+	      })
+            ];
+	    boot.loader.systemd-boot.enable = lib.mkForce false;
+	    boot.lanzaboote = {
+	      enable = true;
+	      pkiBundle = "/var/lib/sbctl";
 	    };
-	  };
-	  modules = [
-        ./configuration.nix
-	    inputs.mangowm.nixosModules.mango
-	    spicetify-nix.nixosModules.spicetify
-	    nixvim.nixosModules.nixvim
-        lanzaboote.nixosModules.lanzaboote
-	    nix-flatpak.nixosModules.nix-flatpak
-        ({ pkgs, lib, ... }:
-        {
-          nixpkgs.overlays = [
-            (final: prev: {
-              unstable  = import inputs.nixpkgs-unstable {
-                system = final.stdenv.hostPlatform.system;
-	            config.allowUnfree = true;
-              };
-            })
-            nix-cachyos-kernel.overlays.default
-          ];
-	      environment.systemPackages = [
-	        pkgs.sbctl
-            inputs.noctalia.packages.${pkgs.stdenv.hostPlatform.system}.default
-	        prismlauncher.packages.${pkgs.stdenv.hostPlatform.system}.prismlauncher
-	        inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default
-	        (yazi.packages.${pkgs.stdenv.hostPlatform.system}.default.override {
-	          _7zz = pkgs._7zz-rar;
-	        })
-          ];
-	      boot.loader.systemd-boot.enable = lib.mkForce false;
-	      boot.lanzaboote = {
-	        enable = true;
-	        pkiBundle = "/var/lib/sbctl";
- 	      };
-	    })
-	  ];
+	  })
+        ];
+      };
     };
   };
 }
