@@ -5,9 +5,9 @@
       ./hardware-configuration.nix
       ./nixosModules/nixvim.nix
       ./nixosModules/spicetify.nix
-      ./nixosModules/hyprland.nix
-      ./nixosModules/peripherials.nix
+      ./nixosModules/mangowm.nix
       ./nixosModules/zsh.nix
+      ./nixosModules/xdg.nix
     ];
   boot.loader.limine.enable = true;
   boot.loader.limine.secureBoot.enable = true;
@@ -48,8 +48,8 @@
     LC_TIME = "en_US.UTF-8";
   };
   services.xserver.enable = true;
-  services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.desktopManager.xfce.enable = true;
+  services.displayManager.sddm.enable = true;
+  #services.desktopManager.plasma6.enable = true;
   services.xserver.xkb = {
     layout = "us";
     variant = "";
@@ -63,9 +63,9 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-  users.users."luna" = {
+  users.users."allie" = {
     isNormalUser = true;
-    description = "luna";
+    description = "allie";
     extraGroups = [ "networkmanager" "wheel" "input" ];
     packages = with pkgs; [
       kdePackages.kdenlive
@@ -98,11 +98,22 @@
   nixpkgs.config.allowUnfree = true;
   programs.steam = {
     enable = true;
-    remotePlay.openFirewall = true; 
-    dedicatedServer.openFirewall = true;
   };
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+  programs.thunar.enable = true;
+  programs.xfconf.enable = true;
+  programs.thunar.plugins = with pkgs; [
+    thunar-archive-plugin
+    thunar-volman
+  ];
+  services.gvfs.enable = true;
+  services.tumbler.enable = true;
   environment.systemPackages = with pkgs; [
     adw-gtk3
+    python3
     ani-cli
     vim
     bat
@@ -134,10 +145,7 @@
     protonup-qt
     ristretto
     sbctl
-    thunar
-    thunar-volman
     tree
-    tumbler
     unrar
     usbutils
     vial
