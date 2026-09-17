@@ -9,20 +9,21 @@
     interactiveShellInit = lib.mkAfter ''
       source ${pkgs.zsh-autocomplete}/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
     '';
-    #promptInit = ''
-     # source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
-    #'';
+    promptInit = ''
+      source ${pkgs.zsh-powerlevel10k}/share/zsh-powerlevel10k/powerlevel10k.zsh-theme
+    '';
     shellAliases = {
       nixconf = "sudo nvim /etc/nixos/configuration.nix";
       flakeconf = "sudo nvim /etc/nixos/flake.nix";
       upflake = "sudo nixos-rebuild switch --flake /etc/nixos#nixos-btw";
       fastconfig = "nvim ~/.config/fastfetch/config.jsonc";
-      hyprconfig = "nvim ~/.config/hypr/hyprland.lua";
+      mangoconfig = "nvim ~/.config/mango/config.conf";
       nixmods = "cd /etc/nixos/nixosModules";
+      ffxvconvert = "~/ffxv-ss-to-jpg.py /mnt/linuxgames/SteamLibrary/steamapps/compatdata/637650/pfx/drive_c/users/steamuser/Documents/My\\ Games/FINAL\\ FANTASY\\ XV/Steam/76561198126254334/savestorage/snapshot ~/FFXV-Photos";
     };
     ohMyZsh = {
       enable = true;
-      theme = "half-life";
+      #theme = "half-life";
       plugins = [ "git" "z" ];
     };
   };
