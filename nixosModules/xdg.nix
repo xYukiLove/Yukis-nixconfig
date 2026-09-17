@@ -6,9 +6,9 @@
       enable = true;
       settings = {
         screencast = {
-	  max_fps = 30;
+	  max_fps = 60;
 	  chooser_type = "dmenu";
-	  chooser_cmd = "${pkgs.wofi}/bin/wofi --show dmenu";
+	  chooser_cmd = "${pkgs.fuzzel}/bin/fuzzel --dmenu";
 	};
       };
     };
@@ -29,15 +29,5 @@
       wlroots = {
       };
     };
-  };
-  xdg.mime = {
-    enable = true;
-    defaultApplications = {
-      "text/html" = "librewolf.desktop";
-      "x-scheme-handler/http" = "librewolf.desktop";
-      "x-scheme-handler/https" = "librewolf.desktop";
-      "x-scheme-handler/about" = "librewolf.desktop";
-      "x-scheme-handler/unknown" = "librewolf.desktop";
-    }; 
   };
 }
